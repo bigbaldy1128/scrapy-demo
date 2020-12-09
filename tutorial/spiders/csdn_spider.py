@@ -5,17 +5,19 @@ from tutorial.items import CsdnItem
 
 
 class CsdnSpider(scrapy.Spider):
-    name = "csdn"
-    allowed_domains = ["csdn.net"]
+    name = "test"
+    allowed_domains = ["toscrape.com"]
     start_urls = [
-        "http://bbs.csdn.net/"
+        "http://quotes.toscrape.com/page/1/"
     ]
 
     def parse(self, response):
-        for sel in response.xpath('//ul[@class="recomTopic_c"]/li'):
-            item = CsdnItem()
-            item['type'] = sel.xpath('label/a[@class="classify"]/text()').extract()
-            item['name'] = sel.xpath('label/a[@class="recom_who"]/text()').extract()
-            item['desc'] = sel.xpath('label/a[@class="recom_title"]/text()').extract()
-            item['date'] = sel.xpath('span[@class="recom_time"]/text()').extract()
-            yield item
+        for sel in response.xpath('//div[@class="quote"]'):
+            yield {
+                'text': sel.xpath('span[@class="text"]/text()').get(),
+                'author': sel.css('small.author::text').get(),
+                'tags': sel.css('div.tags a.tag::text').getall()
+            }
+        next_page = response.css('li.next a::attr(href)').get()
+        if next_page is not None:
+            yield response.follow(next_page, callback=self.parse)
