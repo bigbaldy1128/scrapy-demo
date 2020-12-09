@@ -10,4 +10,5 @@ class CsdnItem(scrapy.Item):
     type = scrapy.Field()
     name = scrapy.Field()
     desc = scrapy.Field()
+    date = scrapy.Field()
 

@@ -12,9 +12,10 @@ class CsdnSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        for sel in response.xpath('//label[@class="recom_t"]'):
+        for sel in response.xpath('//ul[@class="recomTopic_c"]/li'):
             item = CsdnItem()
-            item['type'] = sel.xpath('a[@class="classify"]/text()').extract()
-            item['name'] = sel.xpath('a[@class="recom_who"]/text()').extract()
-            item['desc'] = sel.xpath('a[@class="recom_title"]/text()').extract()
+            item['type'] = sel.xpath('label/a[@class="classify"]/text()').extract()
+            item['name'] = sel.xpath('label/a[@class="recom_who"]/text()').extract()
+            item['desc'] = sel.xpath('label/a[@class="recom_title"]/text()').extract()
+            item['date'] = sel.xpath('span[@class="recom_time"]/text()').extract()
             yield item
