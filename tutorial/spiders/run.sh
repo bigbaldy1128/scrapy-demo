@@ -1,1 +1,1 @@
-scrapy runspider csdn_spider.py
+scrapy runspider quotes_spider.py

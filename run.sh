@@ -1,1 +1,1 @@
-scrapy crawl test -o items.json
+scrapy crawl all-2 -o items.json

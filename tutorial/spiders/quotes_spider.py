@@ -1,14 +1,14 @@
 # @author wangjinzhao on 2020/12/9
 import scrapy
 
-from tutorial.items import CsdnItem
+from tutorial.items import Item
 
 
-class CsdnSpider(scrapy.Spider):
-    name = "test"
+class QuotesSpider(scrapy.Spider):
+    name = "quote"
     allowed_domains = ["toscrape.com"]
     start_urls = [
-        "http://quotes.toscrape.com/page/1/"
+        "http://quotes.toscrape.com/"
     ]
 
     def parse(self, response):
@@ -18,6 +18,4 @@ class CsdnSpider(scrapy.Spider):
                 'author': sel.css('small.author::text').get(),
                 'tags': sel.css('div.tags a.tag::text').getall()
             }
-        next_page = response.css('li.next a::attr(href)').get()
-        if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
+        yield from response.follow_all(css='ul.pager a', callback=self.parse)
